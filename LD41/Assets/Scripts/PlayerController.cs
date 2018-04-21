@@ -1,17 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class PlayerController : MonoBehaviour {
 
     public float speed = 1.0f;
-    public float distToTarget = 0.5f;
+    public float distToTarget = 0.8f;
     public TurnDirection currentDirection;
     private Transform nextTurningPoint;
     private TurnDirection turnDirection;
     private Rigidbody rb;
     public float jumpSpeed = 1.0f;
     private float jumpScale = 100.0f;
+    private float groundedDist = 0.2f;
+    private float horizontalDist = 0.5f;
+    private List<Ray> horizontalRays;
+    private List<Ray> verticalRays;
 
     private Dictionary<TurnDirection, Quaternion> rotations;
 
@@ -21,6 +26,18 @@ public class PlayerController : MonoBehaviour {
         rb = GetComponent<Rigidbody>();
         InitializeRotations();
         SetVelocity(TurnDirection.right);
+        InitializeRays();
+    }
+
+    private void InitializeRays()
+    {
+        horizontalRays = new List<Ray>();
+        verticalRays = new List<Ray>();
+
+        horizontalRays.Add(new Ray(new Vector3(0, 0.1f, 0), Vector3.right));
+        horizontalRays.Add(new Ray(new Vector3(0, 1.0f, 0), Vector3.right));
+
+        verticalRays.Add(new Ray(new Vector3(0, 0.1f, 0), Vector3.up * -1));
     }
 
     private void InitializeRotations()
@@ -62,7 +79,8 @@ public class PlayerController : MonoBehaviour {
                 }            
         }
         transform.rotation = rotations[direction];
-        rb.velocity = transform.right * speed;
+        
+        //MoveRight();
         currentDirection = direction;
         turnDirection = direction;
        
@@ -71,7 +89,7 @@ public class PlayerController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        if (nextTurningPoint != null && Mathf.Abs((transform.position - nextTurningPoint.position).magnitude) < distToTarget)
+        if (nextTurningPoint != null && Mathf.Abs((transform.position.x - nextTurningPoint.position.x)) < distToTarget && Mathf.Abs((transform.position.z - nextTurningPoint.position.z)) < distToTarget)
         {
             Turn();
         }
@@ -80,13 +98,62 @@ public class PlayerController : MonoBehaviour {
         {
             Jump();
         }
+
+        
+        MoveRight();
+        
     }
+
+    private bool CheckForPlatforms(Ray ray, float distance)
+    {
+        RaycastHit hit;
+        ray.origin += transform.position;
+        if (Physics.Raycast(ray, out hit, distance))
+        {
+            if (hit.transform.gameObject.tag == "Platform")
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void MoveRight()
+    {
+        bool platformFound = false;
+        foreach (Ray ray in horizontalRays)
+        {
+            if (CheckForPlatforms(ray, horizontalDist) == true)
+            {
+                platformFound = true;
+                break;
+            }
+        }
+
+        if (platformFound == false)
+        {
+            transform.position = transform.position + (transform.right * speed * Time.deltaTime);
+        }
+    }
+
+
 
     private void Jump()
     {
-        Debug.Log(rb.velocity);
-        rb.AddForce(transform.up * jumpSpeed * jumpScale);
-        Debug.Log(rb.velocity);
+        bool platformFound = false;
+        foreach (Ray ray in verticalRays)
+        {
+            if (CheckForPlatforms(ray, groundedDist) == true)
+            {
+                platformFound = true;
+                break;
+            }
+        }
+
+        if (platformFound == true)
+        {
+            rb.AddForce(transform.up * jumpSpeed * jumpScale);
+        }
     }
 
     private void Turn()
@@ -97,11 +164,6 @@ public class PlayerController : MonoBehaviour {
             SetVelocity(turnDirection);
             nextTurningPoint = null;
         }
-    }
-
-    private void FixedUpdate()
-    {
-        
     }
 
     public void SetTurningPoint(Transform point, TurnDirection direction)
