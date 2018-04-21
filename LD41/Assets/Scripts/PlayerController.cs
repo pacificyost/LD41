@@ -10,6 +10,8 @@ public class PlayerController : MonoBehaviour {
     private Transform nextTurningPoint;
     private TurnDirection turnDirection;
     private Rigidbody rb;
+    public float jumpSpeed = 1.0f;
+    private float jumpScale = 100.0f;
 
     private Dictionary<TurnDirection, Quaternion> rotations;
 
@@ -73,6 +75,18 @@ public class PlayerController : MonoBehaviour {
         {
             Turn();
         }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Jump();
+        }
+    }
+
+    private void Jump()
+    {
+        Debug.Log(rb.velocity);
+        rb.AddForce(transform.up * jumpSpeed * jumpScale);
+        Debug.Log(rb.velocity);
     }
 
     private void Turn()
