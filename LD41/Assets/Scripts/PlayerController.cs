@@ -6,29 +6,40 @@ public class PlayerController : MonoBehaviour {
 
     public float speed = 1.0f;
     public float distToTarget = 0.5f;
+    public TurnDirection currentDirection;
     private Transform nextTurningPoint;
     private TurnDirection turnDirection;
     private Rigidbody rb;
 
-    private Vector3 leftVelocity;
-    private Vector3 rightVelocity;
-    private Vector3 fowardVelocity;
-    private Vector3 backwardVelocity;
+    private Dictionary<TurnDirection, Quaternion> rotations;
 
 	// Use this for initialization
 	void Start () {
 
         rb = GetComponent<Rigidbody>();
-        InitializeVelocities();
+        InitializeRotations();
         SetVelocity(TurnDirection.right);
     }
 
-    private void InitializeVelocities()
+    private void InitializeRotations()
     {
-        leftVelocity = new Vector3(-1 * speed, 0, 0);
-        rightVelocity = new Vector3(speed, 0, 0);
-        fowardVelocity = new Vector3(0, 0, speed);
-        backwardVelocity = new Vector3(0, 0, -1 * speed);
+        rotations = new Dictionary<TurnDirection, Quaternion>();
+        Quaternion right = new Quaternion();
+        right.eulerAngles = new Vector3(0, 0, 0);
+        Quaternion left = new Quaternion();
+        left.eulerAngles = new Vector3(0, 180, 0);
+        Quaternion foward = new Quaternion();
+        foward.eulerAngles = new Vector3(0, 270, 0);
+        Quaternion backward = new Quaternion();
+        backward.eulerAngles = new Vector3(0, 90, 0);
+
+        rotations[TurnDirection.right] = right;
+        rotations[TurnDirection.left] = left;
+        rotations[TurnDirection.foward] = foward;
+        rotations[TurnDirection.backward] = backward;
+        
+
+       
     }
 
     private void SetVelocity(TurnDirection direction)
@@ -36,40 +47,39 @@ public class PlayerController : MonoBehaviour {
         switch (direction)
         {
             case TurnDirection.right:
-                {
-                    rb.velocity = rightVelocity;
-                    break;
-                }
             case TurnDirection.left:
                 {
-                    rb.velocity = leftVelocity;
+                    rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
                     break;
                 }
             case TurnDirection.foward:
-                {
-                    Debug.Log("Foward " + fowardVelocity);
-                    rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezeRotation;
-                    rb.velocity = fowardVelocity;
-                    Debug.Log("RB " + rb.velocity);
-                    break;
-                }
             case TurnDirection.backward:
                 {
-                    rb.velocity = backwardVelocity;
+                    rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezeRotation;
                     break;
-                }
+                }            
         }
+        transform.rotation = rotations[direction];
+        rb.velocity = transform.right * speed;
+        currentDirection = direction;
+        turnDirection = direction;
        
     }
 	
 	// Update is called once per frame
 	void Update () {
-        Debug.Log(rb.velocity);
+
         if (nextTurningPoint != null && Mathf.Abs((transform.position - nextTurningPoint.position).magnitude) < distToTarget)
         {
-            transform.position = new Vector3(nextTurningPoint.transform.position.x,transform.position.y, nextTurningPoint.transform.position.z);
-            
+            Turn();
+        }
+    }
 
+    private void Turn()
+    {
+        if (nextTurningPoint != null)
+        {
+            transform.position = new Vector3(nextTurningPoint.transform.position.x, transform.position.y, nextTurningPoint.transform.position.z);
             SetVelocity(turnDirection);
             nextTurningPoint = null;
         }
