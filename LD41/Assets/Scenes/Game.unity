@@ -126,7 +126,7 @@ GameObject:
   - component: {fileID: 80774489}
   m_Layer: 0
   m_Name: Ground
-  m_TagString: Untagged
+  m_TagString: Platform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -210,7 +210,7 @@ GameObject:
   - component: {fileID: 606419242}
   m_Layer: 0
   m_Name: Ground (3)
-  m_TagString: Untagged
+  m_TagString: Platform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -320,6 +320,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 1378026212062690, guid: b3fae7b7dc09e8740b2fd626b5bc099e, type: 2}
+      propertyPath: m_TagString
+      value: TurningPoint
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b3fae7b7dc09e8740b2fd626b5bc099e, type: 2}
   m_IsPrefabParent: 0
@@ -337,7 +341,7 @@ GameObject:
   - component: {fileID: 916027459}
   m_Layer: 0
   m_Name: TurningPoint (1)
-  m_TagString: Untagged
+  m_TagString: TurningPoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -434,7 +438,7 @@ GameObject:
   - component: {fileID: 1292347938}
   m_Layer: 0
   m_Name: Ground (2)
-  m_TagString: Untagged
+  m_TagString: Platform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -518,7 +522,7 @@ GameObject:
   - component: {fileID: 1704151248}
   m_Layer: 0
   m_Name: Ground (1)
-  m_TagString: Untagged
+  m_TagString: Platform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -603,7 +607,7 @@ GameObject:
   - component: {fileID: 1792684548}
   m_Layer: 0
   m_Name: TurningPoint (2)
-  m_TagString: Untagged
+  m_TagString: TurningPoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -700,7 +704,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4457553456853732, guid: 381460c71933ca541842c9ede9753696, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 1.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4457553456853732, guid: 381460c71933ca541842c9ede9753696, type: 2}
       propertyPath: m_LocalPosition.z
@@ -743,7 +747,7 @@ GameObject:
   - component: {fileID: 2089063110}
   m_Layer: 0
   m_Name: TurningPoint (3)
-  m_TagString: Untagged
+  m_TagString: TurningPoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
