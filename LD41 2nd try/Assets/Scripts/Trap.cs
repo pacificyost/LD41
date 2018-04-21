@@ -9,13 +9,16 @@ public class Trap : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        pc = GameObject.FindObjectOfType<PlayerController>();
+        
         boxCollider = GetComponent<BoxCollider>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
+		if (pc == null)
+        {
+            pc = GameObject.FindObjectOfType<PlayerController>();
+        }
 	}
 
 
