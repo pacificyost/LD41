@@ -20,7 +20,7 @@ public class BoardLayout : MonoBehaviour {
         for (int i = 0; i < pinCount; i++)
         {
             Vector3 pinLocation = new Vector3(Random.Range(minX, maxX), Random.Range(minY, maxY), 0);
-            GameObject newPin = GameObject.Instantiate(pinPrefab, pinLocation, pinPrefab.transform.rotation, transform);
+            GameObject.Instantiate(pinPrefab, pinLocation, pinPrefab.transform.rotation, transform);
         }
     }
 
